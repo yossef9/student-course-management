@@ -139,6 +139,11 @@
     var name = document.getElementById("name").value;
     var teacherName = document.getElementById("teacherName").value;
 
+// Check if the fields are filled
+      if (
+        name.trim().length > 0 &&
+        teacherName.trim().length > 0
+      ) {
     // Construct the request body
     var requestBody = {
         id: courseId,
@@ -169,7 +174,11 @@
     .catch(error => {
         console.error('Error:', error);
     });
-}
+    } else {
+        // If the fields are not filled, show an alert message
+        alert("Please fill the required fields");
+      }
+    }
 </script>
 <script>
     function updateCourse(button) {

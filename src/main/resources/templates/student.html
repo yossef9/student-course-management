@@ -131,42 +131,53 @@
 </script>
 <script>
     function registerStudent() {
-    // Get form data
-    var studentId = document.getElementById("id").value;
-    var firstName = document.getElementById("firstName").value;
-    var lastName = document.getElementById("lastName").value;
+      // Get form data
+      var studentId = document.getElementById("id").value;
+      var firstName = document.getElementById("firstName").value;
+      var lastName = document.getElementById("lastName").value;
 
-    // Construct the request body
-    var requestBody = {
-        id: studentId,
-        firstName: firstName,
-        lastName: lastName
-    };
+      // Check if the fields are filled
+      if (
+        firstName.trim().length > 0 && // First name is not empty
+        lastName.trim().length > 0 // Last name is not empty
+      ) {
+        // If the fields are filled, proceed with the request
+        // Construct the request body
+        var requestBody = {
+          id: studentId,
+          firstName: firstName,
+          lastName: lastName,
+        };
 
-    // Determine whether to send a POST or PUT request based on the presence of studentId
-    var requestMethod = studentId ? 'PUT' : 'POST';
-    var requestUrl = '/api/v1/students';
-    var token = localStorage.getItem("token");
-    // Send the request using Fetch API
-    fetch(requestUrl, {
-        method: requestMethod,
-        headers: {
+        // Determine whether to send a POST or PUT request based on the presence of studentId
+        var requestMethod = studentId ? "PUT" : "POST";
+        var requestUrl = "/api/v1/students";
+        var token = localStorage.getItem("token");
+        // Send the request using Fetch API
+        fetch(requestUrl, {
+          method: requestMethod,
+          headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-        },
-        body: JSON.stringify(requestBody)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        // Reload the page after successful registration or update
-        location.reload();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
+            Authorization: "Bearer " + token,
+          },
+          body: JSON.stringify(requestBody),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            // Reload the page after successful registration or update
+            location.reload();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } else {
+        // If the fields are not filled, show an alert message
+        alert("Please fill the required fields");
+      }
+    }
+
 </script>
 <script>
     function updateStudent(button) {

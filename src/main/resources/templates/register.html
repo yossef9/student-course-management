@@ -69,6 +69,10 @@
         var username = document.getElementById("username").value;
         var password = document.getElementById("password").value;
 
+      if (
+        username.trim().length > 0 &&
+        password.trim().length > 0
+      ) {
         // Construct the request body
         var requestBody = {
             username: username,
@@ -98,7 +102,11 @@
 
             console.error('Error:', error);
         });
-        }
+        } else {
+        // If the fields are not filled, show an alert message
+        alert("Please fill the required fields");
+      }
+      }
 </script>
 </body>
 </html>
