@@ -1,5 +1,6 @@
 package com.scm.studentcoursemanagement.service.impl;
 
+import com.scm.studentcoursemanagement.exceptions.RecordNotFound;
 import com.scm.studentcoursemanagement.models.Student;
 import com.scm.studentcoursemanagement.models.Student;
 import com.scm.studentcoursemanagement.models.repository.StudentRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service("studentService")
 public class StudentServiceImpl implements StudentService {
@@ -23,8 +25,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student getById(Long id) {
-
-        return studentRepository.findById(id).orElseThrow();
+        Optional<Student> student = studentRepository.findById(id);
+        if(student.isPresent()){
+            return student.get();
+        }else {
+            throw new RecordNotFound("Student with the provided id does not exist.");
+        }
     }
 
     @Override
@@ -35,9 +41,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student updateStudent(Student student) {
-        Student oldStudent = studentRepository.findById(student.getId()).orElseThrow();
-
-        return studentRepository.save(student);
+        Optional<Student> oldStudent = studentRepository.findById(student.getId());
+        if(oldStudent.isPresent()){
+            return studentRepository.save(student);
+        }else {
+            throw new RecordNotFound("Student with the provided id does not exist.");
+        }
     }
 
     @Override

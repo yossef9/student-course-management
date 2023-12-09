@@ -1,6 +1,8 @@
 package com.scm.studentcoursemanagement.service.impl;
 
+import com.scm.studentcoursemanagement.exceptions.RecordNotFound;
 import com.scm.studentcoursemanagement.models.Course;
+import com.scm.studentcoursemanagement.models.Student;
 import com.scm.studentcoursemanagement.models.repository.CourseRepository;
 import com.scm.studentcoursemanagement.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,12 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course getById(Long id) {
-
-        return courseRepository.findById(id).orElseThrow();
+        Optional<Course> course = courseRepository.findById(id);
+        if(course.isPresent()){
+            return course.get();
+        }else {
+            throw new RecordNotFound("Course with the provided id does not exist.");
+        }
     }
 
     @Override
@@ -35,9 +41,12 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course updateCourse(Course course) {
-        courseRepository.findById(course.getId()).orElseThrow();
-
-        return courseRepository.save(course);
+        Optional<Course> oldCourse = courseRepository.findById(course.getId());
+        if(oldCourse.isPresent()){
+            return courseRepository.save(course);
+        }else {
+            throw new RecordNotFound("Course with the provided id does not exist.");
+        }
     }
 
     @Override

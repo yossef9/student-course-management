@@ -33,7 +33,7 @@
                     <td th:text="${course.id}"/>
                     <td th:text="${course.name}"/>
                     <td th:text="${course.teacherName}"/>
-                    <td id="del">
+                    <td class="del">
                         <!-- Use the bi-trash class for the trash icon -->
                         <button class="btn btn-danger" th:onclick="'deleteCourse(' + ${course.id} + ')'" type="button">
                             <i class="bi bi-trash"></i>
@@ -75,11 +75,11 @@
                         <input id="id" readonly type="number" style="width: 0px; border: none;">
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="name">Course Name:</label>
-                            <input class="form-control" id="name" placeholder="text" type="text"/>
+                            <input class="form-control" id="name" placeholder="text" type="text" required/>
                         </div>
                         <div class="input-group mb-3">
                             <label class="input-group-text" for="teacherName">Teacher Name:</label>
-                            <input class="form-control" id="teacherName" placeholder="text" type="text"/>
+                            <input class="form-control" id="teacherName" placeholder="text" type="text" required/>
                         </div>
                         <div class="d-flex justify-content-center">
                             <button class="btn btn-info" onclick="registerCourse()" type="button" id="subm">Register</button>
@@ -94,14 +94,21 @@
 
 <script>
     function findCourse() {
-        // Get the course ID from the input field
-        var courseId = document.getElementById("courseId").value;
-
-        // Construct the URL with the course ID
-        var url = "/api/v1/courses/" + courseId;
-
-        // Redirect to the constructed URL
-        window.location.href = url;
+      // Get the course ID from the input field
+      var courseId = document.getElementById("courseId").value;
+      // Construct the URL with the course ID
+      var url = "/api/v1/courses/" + courseId;
+      fetch(url)
+        .then(function (response) {
+          if (response.status >= 200 && response.status <= 299) {
+            window.location.href = url;
+          } else {
+            alert("Error: Record not found.");
+          }
+        })
+        .catch(function (error) {
+          alert("Error: Record not found.");
+        });
     }
 </script>
 <script>
@@ -186,17 +193,22 @@ function checkToken() {
   var token = localStorage.getItem("token");
   // Get the link elements by their ids
   var reg = document.getElementById("reg");
-  var del = document.getElementById("del");
+  // Get the collection of elements by their class
+  var del = document.getElementsByClassName("del");
   // If the token is null or empty, show the login link and hide the logout link
   if (token.length >= 10) {
     console.log("top");
     reg.style.display = "inline";
-    del.style.display = "inline";
+     for (var i = 0; i < del.length; i++) {
+    del[i].style.display = "inline";
+  }
   }
   else {
     console.log("bottom");
     reg.style.display = "none";
-    del.style.display = "none";
+    for (var i = 0; i < del.length; i++) {
+      del[i].style.display = "none";
+    }
   }
 }
 // Call the function when the page loads
